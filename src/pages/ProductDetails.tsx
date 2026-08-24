@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
 import ErrorMessage from '../components/ErrorMessage'
+import Button from '../components/Button'
 import Loading from '../components/Loading'
 import { deleteProduct, getProduct } from '../services/productApi'
 import type { Product } from '../types/product'
@@ -111,13 +112,14 @@ function ProductDetails() {
         </p>
       )}
       {deleteError && <p role="alert">{deleteError}</p>}
-      <button
+      <Button
         type="button"
+        variant="danger"
         onClick={() => void handleDelete()}
-        disabled={isDeleting}
+        loading={isDeleting}
       >
-        {isDeleting ? 'Deleting product...' : 'Delete product'}
-      </button>
+        Delete product
+      </Button>
     </main>
   )
 }

@@ -1,6 +1,7 @@
 import EmptyState from '../components/EmptyState'
 import ErrorMessage from '../components/ErrorMessage'
 import Loading from '../components/Loading'
+import Button from '../components/Button'
 import ProductCard from '../components/ProductCard'
 import { useProducts } from '../hooks/useProducts'
 import { useState } from 'react'
@@ -55,15 +56,16 @@ function Products() {
           ))}
         </select>
       </label>
-      <button
+      <Button
         type="button"
+        variant="secondary"
         onClick={() => {
           setSearchTerm('')
           setSelectedCategory('all')
         }}
       >
         Reset filters
-      </button>
+      </Button>
       <p>{filteredProducts.length} products shown</p>
       <section>
         {filteredProducts.length > 0 ? (
