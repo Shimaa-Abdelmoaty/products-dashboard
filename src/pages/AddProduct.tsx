@@ -2,20 +2,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
-import { z } from 'zod'
 import { createProduct } from '../services/productApi'
 import type { CreateProductInput } from '../types/product'
-
-const addProductSchema = z.object({
-  title: z.string().trim().min(1, 'Title is required.'),
-  price: z.number().positive('Price must be greater than zero.'),
-  category: z.string().trim().min(1, 'Category is required.'),
-  description: z
-    .string()
-    .trim()
-    .min(10, 'Description must be at least 10 characters.'),
-  image: z.string().url('Image must be a valid URL.'),
-})
+import { productSchema } from '../utils/productSchema'
 
 function AddProduct() {
   const navigate = useNavigate()
@@ -25,7 +14,7 @@ function AddProduct() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<CreateProductInput>({
-    resolver: zodResolver(addProductSchema),
+    resolver: zodResolver(productSchema),
   })
 
   async function onSubmit(product: CreateProductInput) {
