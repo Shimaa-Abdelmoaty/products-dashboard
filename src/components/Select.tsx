@@ -25,11 +25,12 @@ function Select<T>({
   const selectedIndex = options.findIndex((option) => option.value === value)
 
   return (
-    <label>
+    <label className="grid gap-2 text-sm font-medium text-slate-300">
       {label}
       <select
         {...props}
         value={String(selectedIndex === -1 ? 0 : selectedIndex)}
+        className={`min-h-11 rounded-lg border border-slate-700 bg-slate-950/70 px-3 text-sm text-slate-100 outline-none transition focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20 ${props.className ?? ''}`}
         onChange={(event) => {
           const selectedOption = options[Number(event.currentTarget.value)]
 
