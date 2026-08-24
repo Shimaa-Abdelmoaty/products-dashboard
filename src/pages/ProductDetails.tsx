@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router'
+import { Link, useNavigate, useParams } from 'react-router'
 import ErrorMessage from '../components/ErrorMessage'
 import Loading from '../components/Loading'
-import { getProduct } from '../services/productApi'
+import { deleteProduct, getProduct } from '../services/productApi'
 import type { Product } from '../types/product'
 
 function ProductDetails() {
   const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [requestId, setRequestId] = useState(0)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState<string | null>(null)
 
   useEffect(() => {
     let isActive = true
@@ -52,6 +55,35 @@ function ProductDetails() {
     }
   }, [id, requestId])
 
+  async function handleDelete() {
+    if (!product || isDeleting || !Number.isInteger(product.id)) {
+      return
+    }
+
+    const confirmed = window.confirm(
+      `Delete "${product.title}"? This action cannot be undone.`,
+    )
+
+    if (!confirmed) {
+      return
+    }
+
+    setIsDeleting(true)
+    setDeleteError(null)
+
+    try {
+      await deleteProduct(product.id)
+      navigate('/products', { replace: true })
+    } catch (deletionError: unknown) {
+      setDeleteError(
+        deletionError instanceof Error
+          ? deletionError.message
+          : 'Unable to delete the product.',
+      )
+      setIsDeleting(false)
+    }
+  }
+
   if (loading) {
     return <Loading />
   }
@@ -78,6 +110,14 @@ function ProductDetails() {
           Rating: {product.rating.rate} ({product.rating.count} reviews)
         </p>
       )}
+      {deleteError && <p role="alert">{deleteError}</p>}
+      <button
+        type="button"
+        onClick={() => void handleDelete()}
+        disabled={isDeleting}
+      >
+        {isDeleting ? 'Deleting product...' : 'Delete product'}
+      </button>
     </main>
   )
 }
