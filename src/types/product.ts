@@ -13,9 +13,11 @@ export type Product = {
   rating: ProductRating
 }
 
-export type CreateProductInput = Omit<Product, 'id' | 'rating'>
+export type ProductFormValues = Omit<Product, 'id' | 'rating'>
 
-export type UpdateProductInput = Partial<CreateProductInput>
+export type CreateProductInput = ProductFormValues
+
+export type UpdateProductInput = Partial<ProductFormValues>
 
 export type ProductsResponse = Product[]
 
