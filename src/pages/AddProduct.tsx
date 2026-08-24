@@ -2,6 +2,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
+import Button from '../components/Button'
+import Input from '../components/Input'
 import { createProduct } from '../services/productApi'
 import type { CreateProductInput } from '../types/product'
 import { productSchema } from '../utils/productSchema'
@@ -41,39 +43,34 @@ function AddProduct() {
     <main>
       <h1>Add product</h1>
       <form onSubmit={(event) => void handleSubmit(onSubmit)(event)}>
-        <label>
-          Title
-          <input {...register('title')} />
-          {errors.title && <span>{errors.title.message}</span>}
-        </label>
-        <label>
-          Price
-          <input
-            type="number"
-            step="0.01"
-            {...register('price', { valueAsNumber: true })}
-          />
-          {errors.price && <span>{errors.price.message}</span>}
-        </label>
-        <label>
-          Category
-          <input {...register('category')} />
-          {errors.category && <span>{errors.category.message}</span>}
-        </label>
+        <Input label="Title" error={errors.title?.message} {...register('title')} />
+        <Input
+          label="Price"
+          error={errors.price?.message}
+          type="number"
+          step="0.01"
+          {...register('price', { valueAsNumber: true })}
+        />
+        <Input
+          label="Category"
+          error={errors.category?.message}
+          {...register('category')}
+        />
         <label>
           Description
           <textarea {...register('description')} />
           {errors.description && <span>{errors.description.message}</span>}
         </label>
-        <label>
-          Image URL
-          <input type="url" {...register('image')} />
-          {errors.image && <span>{errors.image.message}</span>}
-        </label>
+        <Input
+          label="Image URL"
+          error={errors.image?.message}
+          type="url"
+          {...register('image')}
+        />
         {apiError && <p role="alert">{apiError}</p>}
-        <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Adding product...' : 'Add product'}
-        </button>
+        <Button type="submit" loading={isSubmitting}>
+          Add product
+        </Button>
       </form>
     </main>
   )
