@@ -8,6 +8,7 @@ import { useState } from 'react'
 function Products() {
   const { products, loading, error, refetch } = useProducts()
   const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('all')
 
   if (loading) {
     return <Loading />
@@ -21,8 +22,12 @@ function Products() {
     return <EmptyState />
   }
 
+  const categories = Array.from(
+    new Set(products.map((product) => product.category)),
+  )
   const filteredProducts = products.filter((product) =>
-    product.title.toLowerCase().includes(searchTerm.toLowerCase()),
+    product.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (selectedCategory === 'all' || product.category === selectedCategory),
   )
 
   return (
@@ -36,6 +41,29 @@ function Products() {
           onChange={(event) => setSearchTerm(event.target.value)}
         />
       </label>
+      <label>
+        Filter by category
+        <select
+          value={selectedCategory}
+          onChange={(event) => setSelectedCategory(event.target.value)}
+        >
+          <option value="all">All categories</option>
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
+      </label>
+      <button
+        type="button"
+        onClick={() => {
+          setSearchTerm('')
+          setSelectedCategory('all')
+        }}
+      >
+        Reset filters
+      </button>
       <p>{filteredProducts.length} products shown</p>
       <section>
         {filteredProducts.length > 0 ? (
@@ -43,7 +71,7 @@ function Products() {
             <ProductCard key={product.id} product={product} />
           ))
         ) : (
-          <p>No products match your search.</p>
+          <p>No products match the selected filters.</p>
         )}
       </section>
     </main>
