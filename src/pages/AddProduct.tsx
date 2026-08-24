@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router'
 import Button from '../components/Button'
 import Input from '../components/Input'
 import { createProduct } from '../services/productApi'
-import type { CreateProductInput } from '../types/product'
+import type { ProductFormValues } from '../types/product'
 import { productSchema } from '../utils/productSchema'
 
 function AddProduct() {
@@ -15,11 +15,11 @@ function AddProduct() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<CreateProductInput>({
+  } = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
   })
 
-  async function onSubmit(product: CreateProductInput) {
+  async function onSubmit(product: ProductFormValues) {
     setApiError(null)
 
     try {

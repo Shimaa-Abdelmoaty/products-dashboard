@@ -5,7 +5,7 @@ import { Link, useNavigate, useParams } from 'react-router'
 import Button from '../components/Button'
 import { updateProduct, getProduct } from '../services/productApi'
 import Input from '../components/Input'
-import type { CreateProductInput } from '../types/product'
+import type { ProductFormValues } from '../types/product'
 import ErrorMessage from '../components/ErrorMessage'
 import Loading from '../components/Loading'
 import { productSchema } from '../utils/productSchema'
@@ -23,7 +23,7 @@ function EditProduct() {
     reset,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<CreateProductInput>({
+  } = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
   })
 
@@ -74,7 +74,7 @@ function EditProduct() {
     }
   }, [id, requestId, reset])
 
-  async function onSubmit(product: CreateProductInput) {
+  async function onSubmit(product: ProductFormValues) {
     if (productId === null) {
       return
     }
